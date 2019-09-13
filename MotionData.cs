@@ -72,6 +72,7 @@ namespace MotionAnalyzer2 {
             Max = new double[N];
 
             for (int c = 0; c < PlotData.Length; c++) PlotData[c] = new double[0];
+            parameters = AnalyzeDirector.Parameters;
         }
 
 

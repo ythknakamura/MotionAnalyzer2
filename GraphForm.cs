@@ -11,6 +11,8 @@ namespace MotionAnalyzer2 {
         List<GraphItem> graphs;
         bool cursorFix;
 
+
+
         public void UpdateCtrl() {
             bool enable = AnalyzeDirector.Analized;
             if (AnalyzeDirector.Tab == AnalyzeDirector.TabMode.Select) enable = false;
@@ -20,6 +22,8 @@ namespace MotionAnalyzer2 {
                 this.Enabled = true;
                 this.WindowState = FormWindowState.Normal;
                 ButtonCursorReset_Click(null, null);
+
+                double minY = double.MaxValue, maxY = double.MinValue;
                 chart.Series.Clear();
                 foreach (var m in motions) {
                     m.UpdatePlotData();
@@ -28,7 +32,21 @@ namespace MotionAnalyzer2 {
                     chart.ChartAreas[0].AxisY.Title = item.Legend;
                     chart.Series.Add(item.Series);
 
+                    minY = Math.Min(minY, m.Min[item.Index]);
+                    maxY = Math.Max(maxY, m.Max[item.Index]);
                 }
+
+                Func<double, bool, double> optimizeValue = (double val, bool ceil) => {
+                    int sign = Math.Sign(val);
+                    double absv = Math.Abs(val);
+                    if (sign < 0) ceil = !ceil;
+                    if (absv < 1e-10) return 0;
+                    double keta = Math.Pow(10, Math.Floor(Math.Log10(absv)));
+                    if (ceil) return sign * Math.Ceiling(absv / keta) * keta;
+                    else return sign * Math.Floor(absv / keta) * keta;
+                };
+                chart.ChartAreas[0].AxisY.Minimum = optimizeValue(minY, false);
+                chart.ChartAreas[0].AxisY.Maximum = optimizeValue(maxY, true);
             }
             else {
                 this.Enabled = false;
@@ -63,6 +81,8 @@ namespace MotionAnalyzer2 {
 
             chart.ChartAreas[0].AxisX.Minimum = 0;
             chart.ChartAreas[0].AxisX.Maximum = double.NaN;
+            chart.ChartAreas[0].AxisX.RoundAxisValues();
+            chart.ChartAreas[0].AxisY.RoundAxisValues();
         }
 
         public void LoadData(MotionData motionData) {

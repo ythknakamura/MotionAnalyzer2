@@ -152,14 +152,14 @@ namespace MotionAnalyzer2 {
                         TXYW txyw = DrawToOutput(contour, para);
                         md.AddRawData(txyw);
                     }
-                    output3.SaveImage(Path.Combine(targetDir, "out" + t.ToString("00000") + ".jpg"));
+                    //output3.SaveImage(Path.Combine(targetDir, "out" + t.ToString("00000") + ".jpg"));
                     writer.Write(output3);
                     if (bw.CancellationPending) {
                         e.Cancel = true;
                         break;
                     }
                     string message = string.Format("{0}/{1}", t-para.StartFrame, num);
-                    bw.ReportProgress((int)(t * 100 / num), message);
+                    bw.ReportProgress((int)((t-para.StartFrame) * 100 / num), message);
                 }
                 md.UpdatePlotData();
             };
