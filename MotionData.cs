@@ -108,6 +108,11 @@ namespace MotionAnalyzer2 {
             }
         }
 
+        public OpenCvSharp.Point GetOrigin() {
+            TXYW ini = RawData[0];
+            return new OpenCvSharp.Point(ini.x, ini.y);
+        }
+
         public void UpdatePlotData() {
             double spf = 1d / parameters.FPS;
             double width = parameters.LSWindow * spf;
@@ -116,7 +121,7 @@ namespace MotionAnalyzer2 {
             double cos = Math.Cos(theta);
             double sin = Math.Sin(theta);
 
-            int revY = parameters.ReverseYaxis ? -1 : 1;
+            int revY = parameters.ReverseYaxis ? 1 : -1;
             int N = RawData.Count;
             for (int c = 0; c < PlotData.Length; c++) {
                 if (PlotData[c].Length != N) PlotData[c] = new double[N];
