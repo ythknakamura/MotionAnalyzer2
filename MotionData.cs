@@ -110,19 +110,27 @@ namespace MotionAnalyzer2 {
         }
 
         public void UpdatePlotData() {
-            double width = parameters.LSWindow;
+            double width = parameters.LSWindow /(double) parameters.FPS; ;
+            double theta = parameters.XaxisAngle / 180d * Math.PI;
+            double cos = Math.Cos(theta);
+            double sin = Math.Sin(theta);
+
+            int revY = parameters.ReverseYaxis ? -1 : 1;
             int N = RawData.Count;
             for (int c = 0; c < PlotData.Length; c++) {
                 if (PlotData[c].Length != N) PlotData[c] = new double[N];
             }
 
-            //offset
+            //offset and rotate
             TXYW ini = RawData[0];
             for (int i = 0; i < RawData.Count; i++) {
+                double x0 = RawData[i].x - ini.x;
+                double y0 = RawData[i].y - ini.y;
+
                 PlotData[0][i] = RawData[i].t - ini.t;
-                PlotData[1][i] = RawData[i].x - ini.x;
-                PlotData[2][i] = RawData[i].y - ini.y;
-                PlotData[3][i] = RawData[i].w - ini.w;
+                PlotData[1][i] = x0 * cos + y0 * sin;
+                PlotData[2][i] = (-x0 * sin + y0 * cos) * revY;
+                PlotData[3][i] = (RawData[i].w - ini.w - theta) * revY;
             }
 
             //least square

@@ -91,6 +91,8 @@ namespace MotionAnalyzer2 {
                 checkBoxAngle.Checked = para.DetectAngle;
                 numericUpDownWindow.Value = (decimal)para.LSWindow;
                 numericUpDownStorobo.Value = para.StoroboStep;
+                numericUpDownXaxis.Value = para.XaxisAngle;
+                checkBoxRevYaxis.Checked = para.ReverseYaxis;
             }
         }
 
@@ -144,20 +146,6 @@ namespace MotionAnalyzer2 {
             }
         }
 
-        private void NumericUpDownWIndow_ValueChanged(object sender, EventArgs e) {
-            if (AnalyzeDirector.Loaded) {
-                AnalyzeDirector.Parameters.LSWindow = (double)numericUpDownWindow.Value;
-                AnalyzeDirector.UpdateAllControll();
-            }
-        }
-
-        private void NumericUpDownStorobo_ValueChanged(object sender, EventArgs e) {
-            if (AnalyzeDirector.Loaded) {
-                AnalyzeDirector.Parameters.StoroboStep = (int)numericUpDownStorobo.Value;
-                AnalyzeDirector.UpdateAllControll();
-            }
-        }
-
         private void ComboBoxViewMode_SelectedIndexChanged(object sender, EventArgs e) {
             UpdateCtrl();
         }
@@ -175,6 +163,16 @@ namespace MotionAnalyzer2 {
         private void ButtonAggregate_Click(object sender, EventArgs e) {
             AnalyzeDirector.SaveAggregateData();
         }
+        private void GraphCtrlValueChanged(object sender, EventArgs e) {
+            if (AnalyzeDirector.Loaded) {
+                AnalyzeDirector.Parameters.StoroboStep = (int)numericUpDownStorobo.Value;
+                AnalyzeDirector.Parameters.LSWindow = (double)numericUpDownWindow.Value;
+                AnalyzeDirector.Parameters.XaxisAngle = (int)numericUpDownXaxis.Value;
+                AnalyzeDirector.Parameters.ReverseYaxis = checkBoxRevYaxis.Checked;
+                AnalyzeDirector.UpdateAllControll();
+            }
+        }
+
     }
 
     public class ShapeItem {

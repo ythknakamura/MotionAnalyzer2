@@ -64,6 +64,12 @@ namespace MotionAnalyzer2 {
                     mat = vi.TrajectoryMat(para);
                 }
 
+                //axis
+                if (AnalyzeDirector.Analized) {
+                    TXYW ini = AnalyzeDirector.MotionData.RawData[0];
+                    mat.Line(new Point(ini.x, ini.y), new Point(ini.x + 100, ini.y), Scalar.Blue, 10);
+                }
+
                 labelFrame.Text = vi.PosFrames.ToString() + " / " + (vi.FrameCount - 1).ToString();
                 pictureBoxIpl.ImageIpl = mat;
                 this.Enabled = true;

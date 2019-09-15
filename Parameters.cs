@@ -22,8 +22,10 @@ namespace MotionAnalyzer2 {
         public List<Point> Range { get; set; } = new List<Point>();
         public TargetShape Shape { get; set; } = TargetShape.Any;
         public bool DetectAngle { get; set; } = true;
-        public double LSWindow { get; set; } = 0.1d;
+        public double LSWindow { get; set; } = 3d;
         public int StoroboStep { get; set; } = 15;
+        public int XaxisAngle { get; set; } = 0;
+        public bool ReverseYaxis { get; set; } = false;
 
 
         [XmlIgnore]

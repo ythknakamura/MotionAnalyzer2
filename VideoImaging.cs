@@ -283,15 +283,10 @@ namespace MotionAnalyzer2 {
             double time = PosFrames / (double)para.FPS;
             txyw.t = time;
 
-            double? rularDia = para.RularDia();
-            if (rularDia.HasValue) {
-                txyw.x = comx * rularDia.Value;
-                txyw.y = comy * rularDia.Value;
-            }
-            else {
-                txyw.x = comx;
-                txyw.y = comy;
-            }
+            double rularDia = para.RularDia() ?? 1;
+            txyw.x = comx * rularDia;
+            txyw.y = comy * rularDia;
+            
             if (detectAngle) {
                 double angle = 0.5 * Math.Atan2(2 * m.Mu11, m.Mu20 - m.Mu02);
                 const double r = 50;
@@ -300,7 +295,7 @@ namespace MotionAnalyzer2 {
                 txyw.w = angle;
             }
 
-            Cv2.PutText(output3, txyw.ToRichString(rularDia.HasValue, detectAngle),
+            Cv2.PutText(output3, txyw.ToRichString(para.RularDia().HasValue, detectAngle),
                 new OPoint(20, videoCapture.FrameHeight - 20),
                 HersheyFonts.HersheySimplex, 1, Scalar.Red, 3); ;
             return txyw;

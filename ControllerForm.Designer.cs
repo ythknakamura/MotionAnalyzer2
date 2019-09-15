@@ -55,6 +55,9 @@
             this.textBoxFrameCount = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPageGraph = new System.Windows.Forms.TabPage();
+            this.checkBoxRevYaxis = new System.Windows.Forms.CheckBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.numericUpDownXaxis = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownStorobo = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.numericUpDownWindow = new System.Windows.Forms.NumericUpDown();
@@ -69,6 +72,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTarget)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBinary)).BeginInit();
             this.tabPageGraph.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXaxis)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStorobo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWindow)).BeginInit();
             this.tabPageAggregate.SuspendLayout();
@@ -409,6 +413,9 @@
             // 
             // tabPageGraph
             // 
+            this.tabPageGraph.Controls.Add(this.checkBoxRevYaxis);
+            this.tabPageGraph.Controls.Add(this.label12);
+            this.tabPageGraph.Controls.Add(this.numericUpDownXaxis);
             this.tabPageGraph.Controls.Add(this.numericUpDownStorobo);
             this.tabPageGraph.Controls.Add(this.label11);
             this.tabPageGraph.Controls.Add(this.numericUpDownWindow);
@@ -420,6 +427,40 @@
             this.tabPageGraph.TabIndex = 2;
             this.tabPageGraph.Text = "グラフの設定";
             this.tabPageGraph.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRevYaxis
+            // 
+            this.checkBoxRevYaxis.AutoSize = true;
+            this.checkBoxRevYaxis.Location = new System.Drawing.Point(232, 147);
+            this.checkBoxRevYaxis.Name = "checkBoxRevYaxis";
+            this.checkBoxRevYaxis.Size = new System.Drawing.Size(118, 19);
+            this.checkBoxRevYaxis.TabIndex = 23;
+            this.checkBoxRevYaxis.Text = "Y軸を反転する";
+            this.checkBoxRevYaxis.UseVisualStyleBackColor = true;
+            this.checkBoxRevYaxis.CheckedChanged += new System.EventHandler(this.GraphCtrlValueChanged);
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(18, 138);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(100, 30);
+            this.label12.TabIndex = 22;
+            this.label12.Text = "X軸の向き";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // numericUpDownXaxis
+            // 
+            this.numericUpDownXaxis.Location = new System.Drawing.Point(124, 144);
+            this.numericUpDownXaxis.Maximum = new decimal(new int[] {
+            359,
+            0,
+            0,
+            0});
+            this.numericUpDownXaxis.Name = "numericUpDownXaxis";
+            this.numericUpDownXaxis.Size = new System.Drawing.Size(71, 22);
+            this.numericUpDownXaxis.TabIndex = 21;
+            this.numericUpDownXaxis.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownXaxis.ValueChanged += new System.EventHandler(this.GraphCtrlValueChanged);
             // 
             // numericUpDownStorobo
             // 
@@ -438,7 +479,7 @@
             0,
             0,
             0});
-            this.numericUpDownStorobo.ValueChanged += new System.EventHandler(this.NumericUpDownStorobo_ValueChanged);
+            this.numericUpDownStorobo.ValueChanged += new System.EventHandler(this.GraphCtrlValueChanged);
             // 
             // label11
             // 
@@ -451,33 +492,33 @@
             // 
             // numericUpDownWindow
             // 
-            this.numericUpDownWindow.DecimalPlaces = 2;
+            this.numericUpDownWindow.DecimalPlaces = 1;
             this.numericUpDownWindow.Increment = new decimal(new int[] {
             1,
             0,
             0,
-            131072});
+            65536});
             this.numericUpDownWindow.Location = new System.Drawing.Point(124, 27);
             this.numericUpDownWindow.Maximum = new decimal(new int[] {
-            5,
+            20,
             0,
             0,
             0});
             this.numericUpDownWindow.Minimum = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            131072});
+            65536});
             this.numericUpDownWindow.Name = "numericUpDownWindow";
             this.numericUpDownWindow.Size = new System.Drawing.Size(71, 22);
             this.numericUpDownWindow.TabIndex = 19;
             this.numericUpDownWindow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericUpDownWindow.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            65536});
-            this.numericUpDownWindow.ValueChanged += new System.EventHandler(this.NumericUpDownWIndow_ValueChanged);
+            0});
+            this.numericUpDownWindow.ValueChanged += new System.EventHandler(this.GraphCtrlValueChanged);
             // 
             // label10
             // 
@@ -544,6 +585,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTarget)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBinary)).EndInit();
             this.tabPageGraph.ResumeLayout(false);
+            this.tabPageGraph.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXaxis)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStorobo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWindow)).EndInit();
             this.tabPageAggregate.ResumeLayout(false);
@@ -592,5 +635,8 @@
         private System.Windows.Forms.TabPage tabPageAggregate;
         private System.Windows.Forms.Button buttonAggregate;
         private System.Windows.Forms.ListBox listBoxAggregate;
+        private System.Windows.Forms.CheckBox checkBoxRevYaxis;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown numericUpDownXaxis;
     }
 }
