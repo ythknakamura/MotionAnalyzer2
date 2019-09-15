@@ -7,15 +7,14 @@ namespace MotionAnalyzer2 {
     public struct TXYW {
         public double t, x, y, w;
         public static string Caption {
-            get { return string.Format("#{0,9}, {1,10}, {2,10}, {3,10}", "time", "x", "y", "angle"); }
+            get { return string.Format("#{0}, {1}, {2}, {3,10}", "time", "x", "y", "angle"); }
         }
         public override string ToString() {
             return string.Format("{0:f10}, {1:f10}, {2:f10}, {3:f10}", t, x, y, w);
         }
-        public string ToRichString(bool hasRular, bool detectAngle) {
-            string str = string.Format("t={0:f2} s", t);
-            if (hasRular) str += string.Format("    x={0:f2} m    x={1:f2} m", x, y);
-            else str += string.Format("    x={0:f0}    y={1:f0}", x, y);
+        public string ToRichString(bool detectAngle) {
+            string str = string.Format("t={0:f0}", t);
+            str += string.Format("    x={0:f2}    y={1:f2}", x, y);
             if (detectAngle) str += string.Format("    w={0:f2} rad", w);
             return str;
         }
@@ -110,8 +109,10 @@ namespace MotionAnalyzer2 {
         }
 
         public void UpdatePlotData() {
-            double width = parameters.LSWindow /(double) parameters.FPS; ;
+            double spf = 1d / parameters.FPS;
+            double width = parameters.LSWindow * spf;
             double theta = parameters.XaxisAngle / 180d * Math.PI;
+            double rularDia = parameters.RularDia() ?? 1;
             double cos = Math.Cos(theta);
             double sin = Math.Sin(theta);
 
@@ -127,9 +128,9 @@ namespace MotionAnalyzer2 {
                 double x0 = RawData[i].x - ini.x;
                 double y0 = RawData[i].y - ini.y;
 
-                PlotData[0][i] = RawData[i].t - ini.t;
-                PlotData[1][i] = x0 * cos + y0 * sin;
-                PlotData[2][i] = (-x0 * sin + y0 * cos) * revY;
+                PlotData[0][i] = (RawData[i].t - ini.t)* spf;
+                PlotData[1][i] = (x0 * cos + y0 * sin)* rularDia;
+                PlotData[2][i] = (-x0 * sin + y0 * cos) * revY* rularDia;
                 PlotData[3][i] = (RawData[i].w - ini.w - theta) * revY;
             }
 
