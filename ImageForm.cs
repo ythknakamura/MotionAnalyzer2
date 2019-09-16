@@ -1,14 +1,19 @@
 ﻿using OpenCvSharp;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DSize = System.Drawing.Size;
 
 namespace MotionAnalyzer2 {
     public partial class ImageForm : Form, IChildForm {
+        LatestTaskWorker worker;
         public ImageForm() {
             InitializeComponent();
+            worker = new LatestTaskWorker();
         }
+
 
         public void LoadVideo(VideoImaging vi, int startFrame = 0) {
             trackBar.Maximum = vi.FrameCount - 1;
@@ -23,6 +28,11 @@ namespace MotionAnalyzer2 {
                 this.Width = 450 + 18;
                 this.Height = 800 + 147;
             }
+        }
+        private void UpdateCtrlAsync() {
+            worker.Post(() => {
+                this.Invoke((MethodInvoker)UpdateCtrl);
+            });
         }
         public void UpdateCtrl() {
             Parameters para = AnalyzeDirector.Parameters;
@@ -138,12 +148,13 @@ namespace MotionAnalyzer2 {
                 }
             }
             if (needAllUpdate) AnalyzeDirector.UpdateAllControll();
-            else UpdateCtrl();
+            else UpdateCtrlAsync();
 
         }
 
+
         private void TrackBar_Scroll(object sender, EventArgs e) {
-            UpdateCtrl();
+            UpdateCtrlAsync();
         }
 
         private void ButtonSaveImage_Click(object sender, EventArgs e) {
@@ -163,9 +174,23 @@ namespace MotionAnalyzer2 {
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e) {
             if ((sender as RadioButton).Checked) {
-                UpdateCtrl();
+                UpdateCtrlAsync();
             }
         }
 
+    }
+
+    class LatestTaskWorker {
+        BlockingCollection<Action> _actions = new BlockingCollection<Action>();
+        public LatestTaskWorker() {
+            Task.Run(() => {
+                foreach (var action in _actions.GetConsumingEnumerable()) action();
+            });
+        }
+
+        public void Post(Action action) {
+            while (_actions.TryTake(out var a)) { }
+            _actions.Add(action);
+        }
     }
 }
