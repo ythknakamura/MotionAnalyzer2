@@ -22,11 +22,11 @@ namespace MotionAnalyzer2 {
             Size size = vi.Size;
             if (size.Width > size.Height) {//横長
                 this.Width = 800 + 18;
-                this.Height = 450 + 147;
+                this.Height = 450 + 167;
             }
             else {//縦長
                 this.Width = 450 + 18;
-                this.Height = 800 + 147;
+                this.Height = 800 + 167;
             }
         }
         private void UpdateCtrlAsync() {
@@ -52,25 +52,32 @@ namespace MotionAnalyzer2 {
                 Mat mat = new Mat();
                 const int R = 10;
                 if (radioButtonRaw.Checked) {
+                    toolStripStatusLabel.Text = "左クリック：長さの基準の設定          右クリック:検出対象の色の設定";
                     mat = vi.GetRawMat();
                     List<Point> points = para.Ruler;
                     foreach (Point p in points) mat.Circle(p.X, p.Y, R, Scalar.Blue, 4);
                     if (points.Count == 2) mat.Line(points[0], points[1], Scalar.Blue, 4);
                 }
                 else if (radioButtonRange.Checked) {
+                    toolStripStatusLabel.Text = "左クリック：解析範囲の設定          右クリック:解析範囲のクリア";
                     mat = vi.RangeMaskedMat(para);
                     foreach (Point p in para.Range) mat.Rectangle(new Rect(p.X - R, p.Y - R, 2 * R, 2 * R), Scalar.Green, -1);
                 }
                 else if (radioButtonBinary.Checked) {
+                    toolStripStatusLabel.Text = "物体検出用の2値化画像の確認。" +
+                        "上手くいっていない場合、「検出閾値」や「検出対象の色」を変更する";
                     mat = vi.BinaryMat(para);
                 }
                 else if (radioButtonDetect.Checked) {
+                    toolStripStatusLabel.Text = "検出結果の確認。物体の向きは「物体の形状」が円の場合、検出できない。";
                     mat = vi.DetectedMat(para);
                 }
                 else if (radioButtonStrobo.Checked) {
+                    toolStripStatusLabel.Text = "ストロボ風写真の作成。「ストロボの間隔」で調整可能。(小さいと作成に時間がかかるので注意)";
                     mat = vi.StoroboMat(para);
                 }
                 else if (radioButtonTrajectory.Checked) {
+                    toolStripStatusLabel.Text = "物体の重心の軌跡を表示。";
                     mat = vi.TrajectoryMat(para);
                 }
 

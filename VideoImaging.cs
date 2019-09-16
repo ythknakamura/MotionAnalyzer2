@@ -290,7 +290,7 @@ namespace MotionAnalyzer2 {
 
             Cv2.PutText(output3, $"frame:{txyw.t}",
                 new OPoint(20, videoCapture.FrameHeight - 20),
-                HersheyFonts.HersheySimplex, 1, Scalar.Red, 5); ;
+                HersheyFonts.HersheySimplex, 2, Scalar.Red, 3);
             return txyw;
         }
 
