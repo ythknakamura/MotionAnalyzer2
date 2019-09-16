@@ -214,7 +214,7 @@
             this.checkBoxAngle.TabIndex = 23;
             this.checkBoxAngle.Text = "物体の向きを検出する";
             this.checkBoxAngle.UseVisualStyleBackColor = true;
-            this.checkBoxAngle.CheckedChanged += new System.EventHandler(this.CheckBoxAngle_CheckedChanged);
+            this.checkBoxAngle.CheckedChanged += new System.EventHandler(this.CondisionCtrlValueChanged);
             // 
             // comboBoxShape
             // 
@@ -224,7 +224,7 @@
             this.comboBoxShape.Name = "comboBoxShape";
             this.comboBoxShape.Size = new System.Drawing.Size(121, 23);
             this.comboBoxShape.TabIndex = 22;
-            this.comboBoxShape.SelectedIndexChanged += new System.EventHandler(this.ComboBoxShape_SelectedIndexChanged);
+            this.comboBoxShape.SelectedIndexChanged += new System.EventHandler(this.CondisionCtrlValueChanged);
             // 
             // label9
             // 
@@ -281,7 +281,7 @@
             0,
             0,
             0});
-            this.numericBinary.ValueChanged += new System.EventHandler(this.NumericBinary_ValueChanged);
+            this.numericBinary.ValueChanged += new System.EventHandler(this.CondisionCtrlValueChanged);
             // 
             // label7
             // 

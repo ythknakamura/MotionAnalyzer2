@@ -74,7 +74,6 @@ namespace MotionAnalyzer2 {
             parameters = AnalyzeDirector.Parameters;
         }
 
-
         public void AddRawData(TXYW txyw) {
             if (RawData.Count != 0) {
                 double preW = RawData.Last().w;
@@ -107,6 +106,14 @@ namespace MotionAnalyzer2 {
                 }
             }
         }
+
+        public void Purge() {
+            string file1 = Settings.PlotDataname(parameters.VideoFile);
+            if (File.Exists(file1)) File.Delete(file1);
+            string file2 = Settings.RawDataname(parameters.VideoFile);
+            if (File.Exists(file2)) File.Delete(file2);
+        }
+
 
         public OpenCvSharp.Point GetOrigin() {
             TXYW ini = RawData[0];

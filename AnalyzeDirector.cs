@@ -83,5 +83,17 @@ namespace MotionAnalyzer2 {
         public static void SaveAggregateData() {
             GraphForm.SaveManyData();
         }
+
+        public static bool AskPurgeMotionData() {
+            bool result = DialogResult.Yes == MessageBox.Show(
+                "解析の条件を変更するには解析結果を破棄するする必要があります。" 
+                + System.Environment.NewLine + "解析結果を破棄しますか？", 
+                "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result) {
+                MotionData.Purge();
+                MotionData = null;
+            }
+            return result;
+        }
     }
 }

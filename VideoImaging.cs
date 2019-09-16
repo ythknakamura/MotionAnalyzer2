@@ -161,7 +161,7 @@ namespace MotionAnalyzer2 {
                     string message = string.Format("{0}/{1}", t-para.StartFrame, num);
                     bw.ReportProgress((int)((t-para.StartFrame) * 100 / num), message);
                 }
-                md.UpdatePlotData();
+                if(!e.Cancel)md.UpdatePlotData();
             };
 
             ProgressDialog pd = new ProgressDialog("解析中", new DoWorkEventHandler(ProgressDialogDoWork));
@@ -169,7 +169,7 @@ namespace MotionAnalyzer2 {
 
             writer.Release();
             writer.Dispose();
-            pd.Dispose();
+           
             return result == DialogResult.OK ? md : null;
         }
 

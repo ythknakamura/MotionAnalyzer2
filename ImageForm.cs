@@ -111,33 +111,35 @@ namespace MotionAnalyzer2 {
             bool needAllUpdate = false;
             if (!AnalyzeDirector.Loaded) return;
 
-            if (!AnalyzeDirector.Analized) {
-                Point p = GetImagePos(e.X, e.Y);
-                Parameters para = AnalyzeDirector.Parameters;
-                if (radioButtonRaw.Checked) {
-                    if (e.Button == MouseButtons.Left) {
-                        if (para.Ruler.Count == 2) para.Ruler.Clear();
-                        para.Ruler.Add(p);
-                    }
-                    else if (e.Button == MouseButtons.Right) {
-                        para.TargetColor = pictureBoxIpl.ImageIpl.At<Vec3b>(p.Y, p.X);
-                        needAllUpdate = true;
-                    }
+            if (AnalyzeDirector.Analized) {
+                if (!AnalyzeDirector.AskPurgeMotionData()) {
+                    return;
                 }
-                else if (radioButtonRange.Checked) {
-                    if (e.Button == MouseButtons.Left) {
-                        para.Range.Add(p);
-                    }
-                    else if (e.Button == MouseButtons.Right) {
-                        para.Range.Clear();
-                    }
+            }
+
+            Point p = GetImagePos(e.X, e.Y);
+            Parameters para = AnalyzeDirector.Parameters;
+            if (radioButtonRaw.Checked) {
+                if (e.Button == MouseButtons.Left) {
+                    if (para.Ruler.Count == 2) para.Ruler.Clear();
+                    para.Ruler.Add(p);
                 }
-                if (needAllUpdate) AnalyzeDirector.UpdateAllControll();
-                else UpdateCtrl();
+                else if (e.Button == MouseButtons.Right) {
+                    para.TargetColor = pictureBoxIpl.ImageIpl.At<Vec3b>(p.Y, p.X);
+                    needAllUpdate = true;
+                }
             }
-            else {
-                // MessageBox.Show("破棄する？", "", MessageBoxButtons.OK);
+            else if (radioButtonRange.Checked) {
+                if (e.Button == MouseButtons.Left) {
+                    para.Range.Add(p);
+                }
+                else if (e.Button == MouseButtons.Right) {
+                    para.Range.Clear();
+                }
             }
+            if (needAllUpdate) AnalyzeDirector.UpdateAllControll();
+            else UpdateCtrl();
+
         }
 
         private void TrackBar_Scroll(object sender, EventArgs e) {

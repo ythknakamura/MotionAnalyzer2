@@ -60,8 +60,8 @@ namespace MotionAnalyzer2 {
         }
 
         public void UpdateCtrl() {
-            EnableTab(tabPageCondition, AnalyzeDirector.VideoImaging != null);
-            EnableTab(tabPageGraph, AnalyzeDirector.MotionData != null);
+            EnableTab(tabPageCondition, AnalyzeDirector.Loaded);
+            EnableTab(tabPageGraph, AnalyzeDirector.Analized);
             listView.View = comboBoxViewMode.SelectedIndex == 0 ? View.LargeIcon : View.List;
 
             listBoxAggregate.Items.Clear();
@@ -76,7 +76,7 @@ namespace MotionAnalyzer2 {
                 }
             }
             
-            if (AnalyzeDirector.VideoImaging != null) {
+            if (AnalyzeDirector.Loaded) {
                 Parameters para = AnalyzeDirector.Parameters;
                 var tc = para.TargetColor;
 
@@ -94,16 +94,33 @@ namespace MotionAnalyzer2 {
                 numericUpDownXaxis.Value = para.XaxisAngle;
                 checkBoxRevYaxis.Checked = para.ReverseYaxis;
             }
+
+            if (AnalyzeDirector.Analized) {
+
+            }
         }
 
+        // tabView
         private void ButtonLoad_Click(object sender, EventArgs e) {
             AnalyzeDirector.LoadVideoBtnClick(listView.SelectedItems[0].Name);
         }
-
         private void ListView_SelectedIndexChanged(object sender, EventArgs e) {
             buttonLoad.Enabled = listView.SelectedItems.Count != 0;
         }
+        private void ComboBoxViewMode_SelectedIndexChanged(object sender, EventArgs e) {
+            UpdateCtrl();
+        }
 
+        // tabCondision
+        private void CondisionCtrlValueChanged(object sender, EventArgs e) {
+            if (AnalyzeDirector.Loaded) {
+                AnalyzeDirector.Parameters.Thresh = (int)numericBinary.Value;
+                AnalyzeDirector.Parameters.Shape = (Parameters.TargetShape)comboBoxShape.SelectedValue;
+                AnalyzeDirector.Parameters.DetectAngle = checkBoxAngle.Checked;
+                checkBoxAngle.Enabled = (Parameters.TargetShape)comboBoxShape.SelectedValue != Parameters.TargetShape.Circle;
+                AnalyzeDirector.UpdateAllControll();
+            }
+        }
         private void ButtonSFrame_Click(object sender, EventArgs e) {
             AnalyzeDirector.Parameters.StartFrame = AnalyzeDirector.VideoImaging.PosFrames;
             AnalyzeDirector.UpdateAllControll();
@@ -114,55 +131,14 @@ namespace MotionAnalyzer2 {
             AnalyzeDirector.UpdateAllControll();
         }
 
-        private void NumericBinary_ValueChanged(object sender, EventArgs e) {
-            AnalyzeDirector.Parameters.Thresh = (int)numericBinary.Value;
-            AnalyzeDirector.UpdateAllControll();
-        }
-
-        private void ComboBoxShape_SelectedIndexChanged(object sender, EventArgs e) {
-            checkBoxAngle.Enabled = (Parameters.TargetShape)comboBoxShape.SelectedValue != Parameters.TargetShape.Circle;
-            if (AnalyzeDirector.Loaded) {
-                AnalyzeDirector.Parameters.Shape = (Parameters.TargetShape)comboBoxShape.SelectedValue;
-                AnalyzeDirector.UpdateAllControll();
-            }
-        }
-
-        private void CheckBoxAngle_CheckedChanged(object sender, EventArgs e) {
-            if (AnalyzeDirector.Loaded) {
-                AnalyzeDirector.Parameters.DetectAngle = checkBoxAngle.Checked;
-                AnalyzeDirector.UpdateAllControll();
-            }
-        }
-
         private void ButtonAnalyze_Click(object sender, EventArgs e) {
-            if (AnalyzeDirector.Loaded) {
-                AnalyzeDirector.AnalyzeAllBtnClick();
-            }
+            AnalyzeDirector.AnalyzeAllBtnClick();
         }
-
         private void ButtonSaveSetting_Click(object sender, EventArgs e) {
-            if (AnalyzeDirector.Loaded) {
-                AnalyzeDirector.Parameters.Save();
-            }
+            AnalyzeDirector.Parameters.Save();
         }
 
-        private void ComboBoxViewMode_SelectedIndexChanged(object sender, EventArgs e) {
-            UpdateCtrl();
-        }
-
-        private void TabControl_SelectedIndexChanged(object sender, EventArgs e) {
-            AnalyzeDirector.Tab = (AnalyzeDirector.TabMode)tabControl.SelectedTab.Tag;
-            AnalyzeDirector.UpdateAllControll();
-        }
-
-        private void ListBoxAggregate_SelectedIndexChanged(object sender, EventArgs e) {
-            var list = listBoxAggregate.SelectedItems.Cast<string>();
-            AnalyzeDirector.AggregateListChanged(list);
-        }
-
-        private void ButtonAggregate_Click(object sender, EventArgs e) {
-            AnalyzeDirector.SaveAggregateData();
-        }
+        // tabGraph
         private void GraphCtrlValueChanged(object sender, EventArgs e) {
             if (AnalyzeDirector.Loaded) {
                 AnalyzeDirector.Parameters.StoroboStep = (int)numericUpDownStorobo.Value;
@@ -172,6 +148,33 @@ namespace MotionAnalyzer2 {
                 AnalyzeDirector.UpdateAllControll();
             }
         }
+
+        // tabAggerage
+        private void ListBoxAggregate_SelectedIndexChanged(object sender, EventArgs e) {
+            var list = listBoxAggregate.SelectedItems.Cast<string>();
+            AnalyzeDirector.AggregateListChanged(list);
+        }
+
+        private void ButtonAggregate_Click(object sender, EventArgs e) {
+            AnalyzeDirector.SaveAggregateData();
+        }
+
+
+        private void TabControl_SelectedIndexChanged(object sender, EventArgs e) {
+            var tab = (AnalyzeDirector.TabMode)tabControl.SelectedTab.Tag;
+            if (AnalyzeDirector.Analized && tab == AnalyzeDirector.TabMode.Condition) {
+                if (!AnalyzeDirector.AskPurgeMotionData()) {
+                    tabControl.SelectedTab = tabPageGraph;
+                    tab = AnalyzeDirector.TabMode.Graph;
+                }
+            }
+
+            AnalyzeDirector.Tab = tab;
+            AnalyzeDirector.UpdateAllControll();
+        }
+
+        
+       
 
     }
 
