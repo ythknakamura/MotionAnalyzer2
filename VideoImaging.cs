@@ -126,9 +126,8 @@ namespace MotionAnalyzer2 {
         public Mat TrajectoryMat(Parameters para) {
             SetRawMat();
             rawmat.CopyTo(output3);
-            double dia = para.RularDia() ?? 1d;
             var points = AnalyzeDirector.MotionData.RawData
-                .Select(twxt => new OPoint(twxt.x / dia, twxt.y / dia)).ToArray();
+                .Select(twxt => new OPoint(twxt.x, twxt.y)).ToArray();
             for (int i = 0; i < points.Length - 1; i++) {
                 double phase = (double)i / points.Length;
                 Cv2.Line(output3, points[i], points[i + 1], Rainbow(phase), 5);
@@ -295,7 +294,7 @@ namespace MotionAnalyzer2 {
             return txyw;
         }
 
-        Scalar Rainbow(double phase) {
+        private Scalar Rainbow(double phase) {
             phase = Math.Max(Math.Min(phase, 1.0), 0.0); //0から1に
             double pi = Math.PI;
             double b = 255 * (Math.Sin((1.5 * phase + 2.25) * pi) + 1) / 2;
