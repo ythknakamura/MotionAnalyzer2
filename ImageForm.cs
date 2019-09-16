@@ -65,12 +65,12 @@ namespace MotionAnalyzer2 {
                 }
 
                 //axis
-                if (AnalyzeDirector.Analized) {
+                if (AnalyzeDirector.Analized && mat.Type()==MatType.CV_8UC3) {
                     Point o = AnalyzeDirector.MotionData.GetOrigin();
                     double theta = -AnalyzeDirector.Parameters.XaxisAngle / 180d * Math.PI;
                     double dx = Math.Cos(theta);
                     double dy = Math.Sin(theta);
-                    double l = Math.Max(mat.Height, mat.Width) * 0.75;
+                    double l = mat.Height + mat.Width;
                     mat.Line(new Point(o.X - l * dx, o.Y - l * dy), new Point(o.X + l * dx, o.Y + l * dy), Scalar.Violet, 1);
                     mat.Line(new Point(o.X + l * dy, o.Y - l * dx), new Point(o.X - l * dy, o.Y + l*dx), Scalar.Violet, 1) ;
                 }

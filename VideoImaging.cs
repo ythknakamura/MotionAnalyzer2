@@ -292,9 +292,9 @@ namespace MotionAnalyzer2 {
                 txyw.w = angle;
             }
 
-            Cv2.PutText(output3, txyw.ToRichString(detectAngle),
+            Cv2.PutText(output3, $"frame:{txyw.t}",
                 new OPoint(20, videoCapture.FrameHeight - 20),
-                HersheyFonts.HersheySimplex, 1, Scalar.Red, 3); ;
+                HersheyFonts.HersheySimplex, 1, Scalar.Red, 5); ;
             return txyw;
         }
 

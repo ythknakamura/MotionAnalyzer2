@@ -14,8 +14,8 @@ namespace MotionAnalyzer2 {
         }
         public string ToRichString(bool detectAngle) {
             string str = string.Format("t={0:f0}", t);
-            str += string.Format("    x={0:f2}    y={1:f2}", x, y);
-            if (detectAngle) str += string.Format("    w={0:f2} rad", w);
+            //str += string.Format("    x={0:f2}    y={1:f2}", x, y);
+            //if (detectAngle) str += string.Format("    w={0:f2} rad", w);
             return str;
         }
         public static TXYW FromStr(string line) {
