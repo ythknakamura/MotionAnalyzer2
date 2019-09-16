@@ -139,37 +139,34 @@ namespace MotionAnalyzer2 {
         public MotionData AnalizeAll(Parameters para) {
             string targetDir = Settings.TargetDir(para.VideoFile);
             MotionData md = new MotionData();
-            VideoWriter writer = new VideoWriter(Settings.DetectVideoname(para.VideoFile),
-                FourCC.MPG4, 30, output3.Size());
-
+          
             Action<object, DoWorkEventArgs> ProgressDialogDoWork = (sender, e) => {
-                var bw = sender as BackgroundWorker;
-                int num = para.EndFrame - para.StartFrame + 1;
-                for (int t = para.StartFrame; t < para.EndFrame; t++) {
-                    PosFrames = t;
-                    var contour = GetContour(para);
-                    if (contour != null) {
-                        TXYW txyw = DrawToOutput(contour, para);
-                        md.AddRawData(txyw);
+                using (VideoWriter writer = new VideoWriter(Settings.DetectVideoname(para.VideoFile),
+                FourCC.MPG4, 30, output3.Size())) {
+                    var bw = sender as BackgroundWorker;
+                    int num = para.EndFrame - para.StartFrame + 1;
+                    for (int t = para.StartFrame; t < para.EndFrame; t++) {
+                        PosFrames = t;
+                        var contour = GetContour(para);
+                        if (contour != null) {
+                            TXYW txyw = DrawToOutput(contour, para);
+                            md.AddRawData(txyw);
+                        }
+                        writer.Write(output3);
+                        if (bw.CancellationPending) {
+                            e.Cancel = true;
+                            break;
+                        }
+                        string message = string.Format("{0}/{1}", t - para.StartFrame, num);
+                        bw.ReportProgress((int)((t - para.StartFrame) * 100 / num), message);
                     }
-                    //output3.SaveImage(Path.Combine(targetDir, "out" + t.ToString("00000") + ".jpg"));
-                    writer.Write(output3);
-                    if (bw.CancellationPending) {
-                        e.Cancel = true;
-                        break;
-                    }
-                    string message = string.Format("{0}/{1}", t-para.StartFrame, num);
-                    bw.ReportProgress((int)((t-para.StartFrame) * 100 / num), message);
+                    if (!e.Cancel) md.UpdatePlotData();
+                    writer.Release();
                 }
-                if(!e.Cancel)md.UpdatePlotData();
             };
 
             ProgressDialog pd = new ProgressDialog("解析中", new DoWorkEventHandler(ProgressDialogDoWork));
-            DialogResult result = pd.ShowDialog();
-
-            writer.Release();
-            writer.Dispose();
-           
+            DialogResult result = pd.ShowDialog();   
             return result == DialogResult.OK ? md : null;
         }
 
