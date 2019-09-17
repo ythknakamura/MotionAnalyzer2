@@ -8,10 +8,9 @@ using DSize = System.Drawing.Size;
 
 namespace MotionAnalyzer2 {
     public partial class ImageForm : Form, IChildForm {
-        LatestTaskWorker worker;
+        
         public ImageForm() {
             InitializeComponent();
-            worker = new LatestTaskWorker();
         }
 
 
@@ -29,11 +28,7 @@ namespace MotionAnalyzer2 {
                 this.Height = 800 + 167;
             }
         }
-        private void UpdateCtrlAsync() {
-            worker.Post(() => {
-                this.Invoke((MethodInvoker)UpdateCtrl);
-            });
-        }
+    
         public void UpdateCtrl() {
             Parameters para = AnalyzeDirector.Parameters;
 
@@ -155,13 +150,13 @@ namespace MotionAnalyzer2 {
                 }
             }
             if (needAllUpdate) AnalyzeDirector.UpdateAllControll();
-            else UpdateCtrlAsync();
+            else UpdateCtrl();
 
         }
 
 
         private void TrackBar_Scroll(object sender, EventArgs e) {
-            UpdateCtrlAsync();
+            UpdateCtrl();
         }
 
         private void ButtonSaveImage_Click(object sender, EventArgs e) {
@@ -181,23 +176,9 @@ namespace MotionAnalyzer2 {
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e) {
             if ((sender as RadioButton).Checked) {
-                UpdateCtrlAsync();
+                UpdateCtrl();
             }
         }
 
-    }
-
-    class LatestTaskWorker {
-        BlockingCollection<Action> _actions = new BlockingCollection<Action>();
-        public LatestTaskWorker() {
-            Task.Run(() => {
-                foreach (var action in _actions.GetConsumingEnumerable()) action();
-            });
-        }
-
-        public void Post(Action action) {
-            while (_actions.TryTake(out var a)) { }
-            _actions.Add(action);
-        }
     }
 }
