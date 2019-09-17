@@ -65,6 +65,7 @@
             this.tabPageAggregate = new System.Windows.Forms.TabPage();
             this.buttonAggregate = new System.Windows.Forms.Button();
             this.listBoxAggregate = new System.Windows.Forms.ListBox();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControl.SuspendLayout();
             this.tabPageSelect.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -76,6 +77,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStorobo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWindow)).BeginInit();
             this.tabPageAggregate.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -366,6 +368,8 @@
             this.textBoxRuler.Size = new System.Drawing.Size(50, 22);
             this.textBoxRuler.TabIndex = 5;
             this.textBoxRuler.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBoxRuler.Validating += new System.ComponentModel.CancelEventHandler(this.TextBoxRuler_Validating);
+            this.textBoxRuler.Validated += new System.EventHandler(this.TextBoxValidating);
             // 
             // label4
             // 
@@ -383,6 +387,8 @@
             this.textBoxFPS.Size = new System.Drawing.Size(50, 22);
             this.textBoxFPS.TabIndex = 3;
             this.textBoxFPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBoxFPS.Validating += new System.ComponentModel.CancelEventHandler(this.TextBoxFPS_Validating);
+            this.textBoxFPS.Validated += new System.EventHandler(this.TextBoxValidating);
             // 
             // label2
             // 
@@ -563,6 +569,10 @@
             this.listBoxAggregate.TabIndex = 0;
             this.listBoxAggregate.SelectedIndexChanged += new System.EventHandler(this.ListBoxAggregate_SelectedIndexChanged);
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            // 
             // ControllerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -591,6 +601,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWindow)).EndInit();
             this.tabPageAggregate.ResumeLayout(false);
             this.tabPageAggregate.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -638,5 +649,6 @@
         private System.Windows.Forms.CheckBox checkBoxRevYaxis;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown numericUpDownXaxis;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }

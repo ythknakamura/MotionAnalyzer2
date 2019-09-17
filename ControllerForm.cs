@@ -173,8 +173,28 @@ namespace MotionAnalyzer2 {
             AnalyzeDirector.UpdateAllControll();
         }
 
-        
+        private void TextBoxFPS_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            if (int.TryParse(textBoxFPS.Text, out int fps) && fps > 0) {
+                AnalyzeDirector.Parameters.FPS = fps;
+            }
+            else {
+                errorProvider.SetError(textBoxFPS, "正の整数値を入力すること");
+                e.Cancel = true;
+            }
+        }
        
+        private void TextBoxRuler_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            if(double.TryParse(textBoxRuler.Text, out double rulerL) && rulerL > 0) {
+                AnalyzeDirector.Parameters.RulerLength = rulerL;
+            }
+            else {
+                errorProvider.SetError(textBoxRuler, "正の数を入力すること");
+                e.Cancel = true;
+            }
+        }
+        private void TextBoxValidating(object sender, EventArgs e) {
+            errorProvider.SetError((TextBox)sender, null);
+        }
 
     }
 
