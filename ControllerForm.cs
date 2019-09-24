@@ -7,7 +7,6 @@ using System.Windows.Forms;
 
 namespace MotionAnalyzer2 {
     public partial class ControllerForm : Form, IChildForm {
-        private bool isUpdating { get; set; } =false;
         public ControllerForm() {
             InitializeComponent();
 
@@ -62,7 +61,6 @@ namespace MotionAnalyzer2 {
         }
 
         public void UpdateCtrl() {
-            isUpdating = true;
             EnableTab(tabPageCondition, AnalyzeDirector.Loaded);
             EnableTab(tabPageGraph, AnalyzeDirector.Analized);
             listView.View = comboBoxViewMode.SelectedIndex == 0 ? View.LargeIcon : View.List;
@@ -83,9 +81,6 @@ namespace MotionAnalyzer2 {
                 }
             }
 
-            //for (int i = 0; i < listBoxAggregate.Items.Count; i++) listBoxAggregate.SetSelected(i, true);
-            //for (int i = 0; i < listBoxLamp.Items.Count; i++) listBoxLamp.SetSelected(i, true);
-
             if (AnalyzeDirector.Loaded) {
                 Parameters para = AnalyzeDirector.Parameters;
                 var tc = para.TargetColor;
@@ -105,11 +100,6 @@ namespace MotionAnalyzer2 {
                 checkBoxRevYaxis.Checked = para.ReverseYaxis;
             }
 
-            if (AnalyzeDirector.Analized) {
-
-            }
-
-            isUpdating = false;
         }
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e) {
@@ -128,7 +118,7 @@ namespace MotionAnalyzer2 {
 
         // tabView
         private void ButtonLoad_Click(object sender, EventArgs e) {
-            AnalyzeDirector.LoadVideoBtnClick(listView.SelectedItems[0].Name);
+            AnalyzeDirector.LoadVideoFile(listView.SelectedItems[0].Name);
         }
         private void ListView_SelectedIndexChanged(object sender, EventArgs e) {
             buttonLoad.Enabled = listView.SelectedItems.Count != 0;
@@ -158,7 +148,7 @@ namespace MotionAnalyzer2 {
         }
 
         private void ButtonAnalyze_Click(object sender, EventArgs e) {
-            AnalyzeDirector.AnalyzeAllBtnClick();
+            AnalyzeDirector.AnalyzeAllFrames();
         }
         private void ButtonSaveSetting_Click(object sender, EventArgs e) {
             AnalyzeDirector.Parameters.Save();
@@ -212,7 +202,7 @@ namespace MotionAnalyzer2 {
         // tabLamp
         private void ButtonLamp_Click(object sender, EventArgs e) {
             var list = listBoxLamp.SelectedItems.Cast<string>();
-            AnalyzeDirector.LampBtnClick(list);
+            AnalyzeDirector.LampAnalyze(list);
         }
         public bool EnableLamp {
             set {  buttonLamp.Enabled = value; }

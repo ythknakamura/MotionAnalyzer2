@@ -43,10 +43,17 @@ namespace MotionAnalyzer2 {
         }
 
         public static void UpdateAllControll() {
+            (ControllerForm.MdiParent as MainForm).MainTitle = Parameters?.VideoFile ?? "";
             foreach (var f in ChildForm) f.Value.UpdateCtrl();
         }
 
-        public static void LoadVideoBtnClick(string videoFile) {
+        public static void UnloadVideoFile() {
+            VideoImaging = null;
+            Parameters = null;
+            MotionData = null;
+            UpdateAllControll();
+        }
+        public static void LoadVideoFile(string videoFile) {
             VideoImaging = VideoImaging.Load(videoFile);
             if (VideoImaging == null) {
                 Parameters = null;
@@ -63,7 +70,7 @@ namespace MotionAnalyzer2 {
             UpdateAllControll();
             ControllerForm.SwitchTab();
         }
-        public static void AnalyzeAllBtnClick() {
+        public static void AnalyzeAllFrames() {
             Parameters.Save();
             MotionData = VideoImaging.AnalizeAll(Parameters);
             if (MotionData != null) {
@@ -96,11 +103,7 @@ namespace MotionAnalyzer2 {
             return result;
         }
 
-        public static void LampBtnClick(IEnumerable<string> selectedlist) {
-            VideoImaging prevVI = VideoImaging;
-            Parameters prevPara = Parameters;
-            MotionData prevMD = MotionData; 
-
+        public static void LampAnalyze(IEnumerable<string> selectedlist) {
             foreach (string videofile in selectedlist) {
                 VideoImaging vi = VideoImaging.Load(videofile);
                 if (vi == null) continue;
@@ -116,11 +119,7 @@ namespace MotionAnalyzer2 {
 
                 md.SaveRawData(videofile);
             }
-
-            VideoImaging = prevVI;
-            Parameters = prevPara;
-            MotionData = prevMD;
-
+            UnloadVideoFile();
         }
     }
 }
