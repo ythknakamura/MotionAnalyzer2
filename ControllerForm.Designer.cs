@@ -65,6 +65,9 @@
             this.tabPageAggregate = new System.Windows.Forms.TabPage();
             this.buttonAggregate = new System.Windows.Forms.Button();
             this.listBoxAggregate = new System.Windows.Forms.ListBox();
+            this.tabPageLamp = new System.Windows.Forms.TabPage();
+            this.buttonLamp = new System.Windows.Forms.Button();
+            this.listBoxLamp = new System.Windows.Forms.ListBox();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControl.SuspendLayout();
             this.tabPageSelect.SuspendLayout();
@@ -77,6 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStorobo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWindow)).BeginInit();
             this.tabPageAggregate.SuspendLayout();
+            this.tabPageLamp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -86,6 +90,7 @@
             this.tabControl.Controls.Add(this.tabPageCondition);
             this.tabControl.Controls.Add(this.tabPageGraph);
             this.tabControl.Controls.Add(this.tabPageAggregate);
+            this.tabControl.Controls.Add(this.tabPageLamp);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -569,6 +574,40 @@
             this.listBoxAggregate.TabIndex = 0;
             this.listBoxAggregate.SelectedIndexChanged += new System.EventHandler(this.ListBoxAggregate_SelectedIndexChanged);
             // 
+            // tabPageLamp
+            // 
+            this.tabPageLamp.Controls.Add(this.buttonLamp);
+            this.tabPageLamp.Controls.Add(this.listBoxLamp);
+            this.tabPageLamp.Location = new System.Drawing.Point(4, 25);
+            this.tabPageLamp.Name = "tabPageLamp";
+            this.tabPageLamp.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageLamp.Size = new System.Drawing.Size(488, 349);
+            this.tabPageLamp.TabIndex = 4;
+            this.tabPageLamp.Text = "まとめて解析";
+            this.tabPageLamp.UseVisualStyleBackColor = true;
+            // 
+            // buttonLamp
+            // 
+            this.buttonLamp.AutoSize = true;
+            this.buttonLamp.Location = new System.Drawing.Point(310, 279);
+            this.buttonLamp.Name = "buttonLamp";
+            this.buttonLamp.Size = new System.Drawing.Size(146, 25);
+            this.buttonLamp.TabIndex = 3;
+            this.buttonLamp.Text = "解析開始";
+            this.buttonLamp.UseVisualStyleBackColor = true;
+            this.buttonLamp.Click += new System.EventHandler(this.ButtonLamp_Click);
+            // 
+            // listBoxLamp
+            // 
+            this.listBoxLamp.FormattingEnabled = true;
+            this.listBoxLamp.ItemHeight = 15;
+            this.listBoxLamp.Location = new System.Drawing.Point(33, 45);
+            this.listBoxLamp.Name = "listBoxLamp";
+            this.listBoxLamp.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.listBoxLamp.Size = new System.Drawing.Size(239, 259);
+            this.listBoxLamp.TabIndex = 2;
+            this.listBoxLamp.SelectedIndexChanged += new System.EventHandler(this.ListBoxLamp_SelectedIndexChanged);
+            // 
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
@@ -601,6 +640,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWindow)).EndInit();
             this.tabPageAggregate.ResumeLayout(false);
             this.tabPageAggregate.PerformLayout();
+            this.tabPageLamp.ResumeLayout(false);
+            this.tabPageLamp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
@@ -650,5 +691,8 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown numericUpDownXaxis;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.TabPage tabPageLamp;
+        private System.Windows.Forms.Button buttonLamp;
+        private System.Windows.Forms.ListBox listBoxLamp;
     }
 }

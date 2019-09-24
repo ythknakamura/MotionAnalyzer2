@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 namespace MotionAnalyzer2 {
     public partial class ControllerForm : Form, IChildForm {
+        private bool isUpdating { get; set; } =false;
         public ControllerForm() {
             InitializeComponent();
 
@@ -14,6 +15,7 @@ namespace MotionAnalyzer2 {
             tabPageCondition.Tag = AnalyzeDirector.TabMode.Condition;
             tabPageGraph.Tag = AnalyzeDirector.TabMode.Graph;
             tabPageAggregate.Tag = AnalyzeDirector.TabMode.Aggregate;
+            tabPageLamp.Tag = AnalyzeDirector.TabMode.Lamp;
 
             List<ShapeItem> src = new List<ShapeItem>() {
                 new ShapeItem { Name = "円", Shape = Parameters.TargetShape.Circle },
@@ -60,12 +62,14 @@ namespace MotionAnalyzer2 {
         }
 
         public void UpdateCtrl() {
+            isUpdating = true;
             EnableTab(tabPageCondition, AnalyzeDirector.Loaded);
             EnableTab(tabPageGraph, AnalyzeDirector.Analized);
             listView.View = comboBoxViewMode.SelectedIndex == 0 ? View.LargeIcon : View.List;
 
             listBoxAggregate.Items.Clear();
-            foreach(ListViewItem item in listView.Items) {
+            listBoxLamp.Items.Clear();
+            foreach (ListViewItem item in listView.Items) {
                 string file = item.Name;
                 string c1 = File.Exists(Settings.XmlFilename(file)) ? "@" : " ";
                 string c2 = File.Exists(Settings.RawDataname(file)) ? "#" : " ";
@@ -74,8 +78,14 @@ namespace MotionAnalyzer2 {
                 if (File.Exists(Settings.RawDataname(file))) {
                     listBoxAggregate.Items.Add(file);
                 }
+                if (File.Exists(Settings.XmlFilename(file))) {
+                    listBoxLamp.Items.Add(file);
+                }
             }
-            
+
+            //for (int i = 0; i < listBoxAggregate.Items.Count; i++) listBoxAggregate.SetSelected(i, true);
+            //for (int i = 0; i < listBoxLamp.Items.Count; i++) listBoxLamp.SetSelected(i, true);
+
             if (AnalyzeDirector.Loaded) {
                 Parameters para = AnalyzeDirector.Parameters;
                 var tc = para.TargetColor;
@@ -98,7 +108,23 @@ namespace MotionAnalyzer2 {
             if (AnalyzeDirector.Analized) {
 
             }
+
+            isUpdating = false;
         }
+
+        private void TabControl_SelectedIndexChanged(object sender, EventArgs e) {
+            var tab = (AnalyzeDirector.TabMode)tabControl.SelectedTab.Tag;
+            if (AnalyzeDirector.Analized && tab == AnalyzeDirector.TabMode.Condition) {
+                if (!AnalyzeDirector.AskPurgeMotionData()) {
+                    tabControl.SelectedTab = tabPageGraph;
+                    tab = AnalyzeDirector.TabMode.Graph;
+                }
+            }
+
+            AnalyzeDirector.Tab = tab;
+            AnalyzeDirector.UpdateAllControll();
+        }
+
 
         // tabView
         private void ButtonLoad_Click(object sender, EventArgs e) {
@@ -138,6 +164,29 @@ namespace MotionAnalyzer2 {
             AnalyzeDirector.Parameters.Save();
         }
 
+        private void TextBoxFPS_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            if (int.TryParse(textBoxFPS.Text, out int fps) && fps > 0) {
+                AnalyzeDirector.Parameters.FPS = fps;
+            }
+            else {
+                errorProvider.SetError(textBoxFPS, "正の整数値を入力すること");
+                e.Cancel = true;
+            }
+        }
+
+        private void TextBoxRuler_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            if (double.TryParse(textBoxRuler.Text, out double rulerL) && rulerL > 0) {
+                AnalyzeDirector.Parameters.RulerLength = rulerL;
+            }
+            else {
+                errorProvider.SetError(textBoxRuler, "正の数を入力すること");
+                e.Cancel = true;
+            }
+        }
+        private void TextBoxValidating(object sender, EventArgs e) {
+            errorProvider.SetError((TextBox)sender, null);
+        }
+
         // tabGraph
         private void GraphCtrlValueChanged(object sender, EventArgs e) {
             if (AnalyzeDirector.Loaded) {
@@ -158,44 +207,21 @@ namespace MotionAnalyzer2 {
         private void ButtonAggregate_Click(object sender, EventArgs e) {
             AnalyzeDirector.SaveAggregateData();
         }
-
-
-        private void TabControl_SelectedIndexChanged(object sender, EventArgs e) {
-            var tab = (AnalyzeDirector.TabMode)tabControl.SelectedTab.Tag;
-            if (AnalyzeDirector.Analized && tab == AnalyzeDirector.TabMode.Condition) {
-                if (!AnalyzeDirector.AskPurgeMotionData()) {
-                    tabControl.SelectedTab = tabPageGraph;
-                    tab = AnalyzeDirector.TabMode.Graph;
-                }
-            }
-
-            AnalyzeDirector.Tab = tab;
-            AnalyzeDirector.UpdateAllControll();
-        }
-
-        private void TextBoxFPS_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
-            if (int.TryParse(textBoxFPS.Text, out int fps) && fps > 0) {
-                AnalyzeDirector.Parameters.FPS = fps;
-            }
-            else {
-                errorProvider.SetError(textBoxFPS, "正の整数値を入力すること");
-                e.Cancel = true;
-            }
-        }
        
-        private void TextBoxRuler_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
-            if(double.TryParse(textBoxRuler.Text, out double rulerL) && rulerL > 0) {
-                AnalyzeDirector.Parameters.RulerLength = rulerL;
-            }
-            else {
-                errorProvider.SetError(textBoxRuler, "正の数を入力すること");
-                e.Cancel = true;
-            }
+       
+        // tabLamp
+        private void ButtonLamp_Click(object sender, EventArgs e) {
+            var list = listBoxLamp.SelectedItems.Cast<string>();
+            AnalyzeDirector.LampBtnClick(list);
         }
-        private void TextBoxValidating(object sender, EventArgs e) {
-            errorProvider.SetError((TextBox)sender, null);
+        public bool EnableLamp {
+            set {  buttonLamp.Enabled = value; }
         }
 
+        private void ListBoxLamp_SelectedIndexChanged(object sender, EventArgs e) {
+            bool ok = listBoxLamp.SelectedItems.Count > 0;
+            EnableLamp = ok; 
+        }
     }
 
     public class ShapeItem {

@@ -164,7 +164,7 @@ namespace MotionAnalyzer2 {
                 }
             };
 
-            ProgressDialog pd = new ProgressDialog("解析中", new DoWorkEventHandler(ProgressDialogDoWork));
+            ProgressDialog pd = new ProgressDialog($"解析中:{para.VideoFile}", new DoWorkEventHandler(ProgressDialogDoWork));
             DialogResult result = pd.ShowDialog();   
             return result == DialogResult.OK ? md : null;
         }

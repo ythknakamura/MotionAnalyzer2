@@ -52,7 +52,7 @@ namespace MotionAnalyzer2 {
             }
         }
 
-        public static Parameters LoadOrCreate(string videoFile, VideoImaging vi) {
+        public static Parameters LoadOrCreate(string videoFile, VideoImaging vi, bool donotCreate=false) {
             Parameters parameter;
             string targetdir = Settings.TargetDir(videoFile);
             string filename = Settings.XmlFilename(videoFile);
@@ -64,6 +64,9 @@ namespace MotionAnalyzer2 {
                 using (var xmlReader = System.Xml.XmlReader.Create(sr, xmlSettings)) {
                     parameter = (Parameters)serializer.Deserialize(xmlReader);
                 }
+            }
+            else if (donotCreate) {
+                parameter = null;
             }
             else {
                 parameter = new Parameters() {

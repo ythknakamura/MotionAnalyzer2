@@ -9,7 +9,7 @@ namespace MotionAnalyzer2 {
 
     public static class AnalyzeDirector {
         public enum Children { Controll, Image, Graph };
-        public enum TabMode {Select, Condition, Graph, Aggregate};
+        public enum TabMode {Select, Condition, Graph, Aggregate, Lamp};
 
         public static bool Loaded { get { return VideoImaging != null; } }
         public static bool Analized { get { return MotionData != null; } }
@@ -94,6 +94,33 @@ namespace MotionAnalyzer2 {
                 MotionData = null;
             }
             return result;
+        }
+
+        public static void LampBtnClick(IEnumerable<string> selectedlist) {
+            VideoImaging prevVI = VideoImaging;
+            Parameters prevPara = Parameters;
+            MotionData prevMD = MotionData; 
+
+            foreach (string videofile in selectedlist) {
+                VideoImaging vi = VideoImaging.Load(videofile);
+                if (vi == null) continue;
+                VideoImaging = vi;
+
+                Parameters para = Parameters.LoadOrCreate(videofile, vi, true);
+                if (para == null) continue;
+                Parameters = para;
+
+                MotionData md = vi.AnalizeAll(para);
+                if (md == null) continue;
+                MotionData = md;
+
+                md.SaveRawData(videofile);
+            }
+
+            VideoImaging = prevVI;
+            Parameters = prevPara;
+            MotionData = prevMD;
+
         }
     }
 }
